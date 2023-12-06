@@ -6,6 +6,7 @@ import { useState } from 'react'
 //import Header from './components/Header.jsx'
 import Main from './components/Main.jsx'
 import Die from './components/Die.jsx'
+import {nanoid} from "nanoid"
 import '../style.css'
 
 /**
@@ -40,17 +41,34 @@ import '../style.css'
     * 
     * Log the array of numbers to the console for now
     */
+      /**
+       * Challenge #4:
+       * 
+       * Create state to hold our array of numbers. (Initialize
+       * the state by calling our `allNewDice` function so it 
+       * loads all new dice as soon as the app loads)
+       * 
+       * Map over the state numbers array to generate our array
+       * of Die elements and render those in place of our
+       * manually-written 10 Die elements.
+       */
         /**
-         * Challenge #4:
-         * 
-         * Create state to hold our array of numbers. (Initialize
-         * the state by calling our `allNewDice` function so it 
-         * loads all new dice as soon as the app loads)
-         * 
-         * Map over the state numbers array to generate our array
-         * of Die elements and render those in place of our
-         * manually-written 10 Die elements.
-         */
+        * Challenge #5: Update the array of numbers in state to be
+        * an array of objects instead. Each object should look like:
+        * { value: <random number>, isHeld: false }
+        * 
+        * Making this change will break parts of our code, so make
+        * sure to update things so we're back to a working state
+        */
+          /**
+          * Challenge #6: Add conditional styling to the Die component
+          * so that if it's held (isHeld === true), its background color
+          * changes to a light green (#59E391)
+          * 
+          * Remember: currently the Die component has no way of knowing
+          * if it's "held" or not.
+          */
+  
 
 function App() {
 
@@ -65,14 +83,34 @@ function App() {
      // return array
     const newDice = []
     for (let i = 0; i < 10; i++) {
-    //newDice.push(Math.floor(Math.random() * 6) +1)
-      newDice.push(Math.ceil(Math.random() * 6))
+//#5  newDice.push(Math.ceil(Math.random() * 6))
+      newDice.push({
+        value: Math.ceil(Math.random() * 6), 
+        isHeld: true,
+        id: nanoid() 
+      })
     }
+    
     return newDice
   }
 
+  function toggle(id) {
+    setDice(prevDice => prevDice.map(die => (die.id === id) ? {...die, isHeld: !die.isHeld} : die))
+  }
+// const diceElements = dice.map(die =>  <Die key={die.id} value={die.value}  /> )  //  instead of <Die value={die} />
+  const diceElements = dice.map(die => (
+    <Die 
+      key={die.id}
+      isHeld={die.isHeld}
+      value={die.value}
+      toggle={() => toggle(die.id)}
+      
+    />
+  ))
 
-  const diceElements = dice.map(die =>  <Die value={die}  /> )
+  function rollDice() {
+    setDice(allNewDice())
+  }
 
 
   return (
@@ -82,22 +120,13 @@ function App() {
         <h1 className='main--title'>Tenzies</h1>
         <p className='main--text'>Roll untill all dice are the same. Click each die to freeze it at its current value between rolls.</p>
         <div className='dice-container'>
-          {/* <Die  value="1" />
-          <Die  value="6" />
-          <Die  value="5" />
-          <Die  value="2" />
-          <Die  value="4" />
-          <Die  value="3" />
-          <Die  value="6" />
-          <Die  value="1" />
-          <Die  value="5" />
-          <Die  value="2" /> */}
+
           {diceElements}
-          {/* {squareElements} */}
+          
         </div>       
       </div>
-      
-      <button>Roll</button>
+
+      <button className='roll-dice' onClick={rollDice}>Roll</button>
       
     </main>
   )
