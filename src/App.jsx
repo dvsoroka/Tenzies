@@ -68,49 +68,102 @@ import '../style.css'
           * Remember: currently the Die component has no way of knowing
           * if it's "held" or not.
           */
-  
+            /**
+            * Challenge #7: Create a function `holdDice` that takes
+            * `id` as a parameter. For now, just have the function
+            * console.log(id).
+            * 
+            * Then, figure out how to pass that function down to each
+            * instance of the Die component so when each one is clicked,
+            * it logs its own unique ID property. (Hint: there's more
+            * than one way to make that work, so just choose whichever
+            * you want)
+            * 
+            */
+
 
 function App() {
 
   const [dice, setDice] = React.useState(allNewDice());
 
-  console.log(dice)
+//#8refactoring  function allNewDice() {
+//#8refactoring     // new array to hold my numbers
+//#8refactoring     // loop 10 times
+//#8refactoring         // push a random number from 1-6 to my array
+//#8refactoring     // return array
+//#8refactoring    const newDice = []
+//#8refactoring    for (let i = 0; i < 10; i++) {
+//#8refactoring//#5  newDice.push(Math.ceil(Math.random() * 6))
+//#8refactoring      newDice.push({
+//#8refactoring        value: Math.ceil(Math.random() * 6), 
+//#8refactoring        isHeld: false,
+//#8refactoring        id: nanoid() 
+//#8refactoring      })
+//#8refactoring    }
+//#8refactoring    
+//#8refactoring    return newDice
+//#8refactoring  }
 
-  function allNewDice() {
-     // new array to hold my numbers
-     // loop 10 times
-         // push a random number from 1-6 to my array
-     // return array
-    const newDice = []
-    for (let i = 0; i < 10; i++) {
-//#5  newDice.push(Math.ceil(Math.random() * 6))
-      newDice.push({
-        value: Math.ceil(Math.random() * 6), 
-        isHeld: true,
-        id: nanoid() 
-      })
-    }
-    
-    return newDice
+function generateNewDie() {
+  return {
+      value: Math.ceil(Math.random() * 6),
+      isHeld: false,
+      id: nanoid()
   }
+}
+
+function allNewDice() {
+  const newDice = []
+  for (let i = 0; i < 10; i++) {
+      newDice.push(generateNewDie())
+  }
+  return newDice
+}
+
+              /**
+              * Challenge #8: Update the `rollDice` function to not just roll
+              * all new dice, but instead to look through the existing dice
+              * to NOT role any that are being `held`.
+              * 
+              * Hint: this will look relatively similiar to the `holdDice`
+              * function below. When creating new dice, remember to use
+              * `id: nanoid()` so any new dice have an `id` as well.
+              */
+
+//#8refactoring  function rollDice() {
+//#8refactoring    setDice(prevDice => prevDice.map(
+//#8refactoring      die => (die.isHeld !== true ? {...die, value: Math.ceil(Math.random() * 6)} : die)))
+//#8refactoring
+//#8refactoring  }
+function rollDice() {
+  setDice(oldDice => oldDice.map(die => {
+      return die.isHeld ? 
+          die :
+          generateNewDie()
+  }))
+}
+
 
   function toggle(id) {
     setDice(prevDice => prevDice.map(die => (die.id === id) ? {...die, isHeld: !die.isHeld} : die))
   }
+
+  function holdDice(id) {
+    setDice(prevDice => prevDice.map(die => (die.id === id) ? {...die, isHeld: !die.isHeld} : die))
+    console.log(id)
+  }
+
+
 // const diceElements = dice.map(die =>  <Die key={die.id} value={die.value}  /> )  //  instead of <Die value={die} />
   const diceElements = dice.map(die => (
     <Die 
       key={die.id}
       isHeld={die.isHeld}
       value={die.value}
-      toggle={() => toggle(die.id)}
-      
+      holdDice={() => holdDice(die.id)}
+//#7  toggle={() => toggle(die.id)}           //Working!
     />
   ))
-
-  function rollDice() {
-    setDice(allNewDice())
-  }
 
 
   return (
