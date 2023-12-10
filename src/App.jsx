@@ -1,152 +1,146 @@
 import React from 'react'
 import { useState } from 'react'
-//import reactLogo from './assets/react.svg'
-//import viteLogo from '/vite.svg'
-//import './App.css'
-//import Header from './components/Header.jsx'
 import Main from './components/Main.jsx'
 import Die from './components/Die.jsx'
 import {nanoid} from "nanoid"
 import '../style.css'
 
-/**
- * Challenge #1:
- * 
- * - Create a Die component that takes a `value` prop
- * - Render 10 instances of the Die component (manually)
- *      - Provide a number between 1-6 for the value on each
- *        for now
- * - Style the <main> and <Die> components 
- *   to look like they do in the slide
- *      - Hints: Create a container to hold the 10 instances
- *        of the Die component, and use CSS Grid to lay them
- *        out evenly in 2 rows of 5 columns
- *      - Use flexbox on main to center the dice container
- *        in the center of the page
- */
-
-  /**
-  * Challenge #2:
-  * 
-  * Write a function (allNewDice) that returns an array 
-  * of 10 random numbers between 1-6 inclusive.
-  * 
-  * Log the array of numbers to the console for now
-  */
-    /**
-    * Challenge #3:
-    * https://scrimba.com/learn/learnreact/tenzies-generate-array-of-10-random-numbers-cod40451b92865f80528ed9e7
-    * Write a function (allNewDice) that returns an array 
-    * of 10 random numbers between 1-6 inclusive.
-    * 
-    * Log the array of numbers to the console for now
-    */
-      /**
-       * Challenge #4:
-       * 
-       * Create state to hold our array of numbers. (Initialize
-       * the state by calling our `allNewDice` function so it 
-       * loads all new dice as soon as the app loads)
-       * 
-       * Map over the state numbers array to generate our array
-       * of Die elements and render those in place of our
-       * manually-written 10 Die elements.
-       */
-        /**
-        * Challenge #5: Update the array of numbers in state to be
-        * an array of objects instead. Each object should look like:
-        * { value: <random number>, isHeld: false }
-        * 
-        * Making this change will break parts of our code, so make
-        * sure to update things so we're back to a working state
-        */
-          /**
-          * Challenge #6: Add conditional styling to the Die component
-          * so that if it's held (isHeld === true), its background color
-          * changes to a light green (#59E391)
-          * 
-          * Remember: currently the Die component has no way of knowing
-          * if it's "held" or not.
-          */
-            /**
-            * Challenge #7: Create a function `holdDice` that takes
-            * `id` as a parameter. For now, just have the function
-            * console.log(id).
-            * 
-            * Then, figure out how to pass that function down to each
-            * instance of the Die component so when each one is clicked,
-            * it logs its own unique ID property. (Hint: there's more
-            * than one way to make that work, so just choose whichever
-            * you want)
-            * 
-            */
-
-
 function App() {
 
   const [dice, setDice] = React.useState(allNewDice());
 
-//#8refactoring  function allNewDice() {
-//#8refactoring     // new array to hold my numbers
-//#8refactoring     // loop 10 times
-//#8refactoring         // push a random number from 1-6 to my array
-//#8refactoring     // return array
-//#8refactoring    const newDice = []
-//#8refactoring    for (let i = 0; i < 10; i++) {
-//#8refactoring//#5  newDice.push(Math.ceil(Math.random() * 6))
-//#8refactoring      newDice.push({
-//#8refactoring        value: Math.ceil(Math.random() * 6), 
-//#8refactoring        isHeld: false,
-//#8refactoring        id: nanoid() 
-//#8refactoring      })
-//#8refactoring    }
-//#8refactoring    
-//#8refactoring    return newDice
-//#8refactoring  }
+  const [tenzies, setTenzies] = React.useState(false)
 
-function generateNewDie() {
-  return {
-      value: Math.ceil(Math.random() * 6),
-      isHeld: false,
-      id: nanoid()
+
+  React.useEffect(() =>{
+    tenzies && console.log("You won!")
+  }, [tenzies])
+
+  console.log(`tenzies: ${tenzies}`)
+/**
+ * https://scrimba.com/learn/learnreact/tenzies-end-game-part-2-coda448ae89bf4c2861487e00
+ * Challenge: Check the dice array for these winning conditions:
+ * 1. All dice are held, and
+ * 2. all dice have the same value
+ * 
+ * If both conditions are true, set `tenzies` to true and log
+ * "You won!" to the console
+ */
+  React.useEffect(() => {
+    // const checkArr = []
+    // for (let i = 0; i < dice.length; i++) {
+    //   if (dice[i].isHeld === true) {
+    //     let valueToCheck = dice[i].value
+    //     checkArr.push(valueToCheck)
+    //   }
+    // }
+    // console.log(checkArr.reduce)
+    // let dis = dice.reduce(function (previousElement, previousElement) {
+    //   return previousElement.value + currentElement.value
+    // })
+
+
+//  console.log(dice.map(die => die.isHeld ? die.value : ""))
+// console.log(dice
+//   .filter(element => element.isHeld === true)
+//   .reduce((accumulator, currentValue, currintIndex, arr) => {
+//     let result = (accumulator + currentValue.value)/currentValue.value
+//     console.log(`currentValue: ${currentValue.value}`)
+//     console.log(`accumulator: ${accumulator}`)
+//     console.log(`result: ${result}`)
+//     return result
+  
+//   }, 0)
+// )
+    let selectedArr = []
+    let refValues = dice.map(die => die.value).filter(element => element.isHeld === true)
+//    refValues = dice.map(die => die.value && die.isHeld)
+    var refValue
+    for (let i = 0; i < dice.length; i++) {
+      let currentElement = dice[i]
+      if (currentElement.isHeld === true) {
+        
+        if (refValues.length > 0) {
+          let prevRefValue = refValues.pop()
+          refValues.push(prevRefValue)
+          while (prevRefValue !== currentElement.value) {
+             alert("You marked dices with different values!")
+             break
+           }
+           refValues.push(currentElement.value)
+           if (refValues.length > 9) {
+            refValue = refValues.pop()
+            refValues.push(refValue)
+
+ //           refValues.forEach(element => )
+            console.log("Congratulations, you've won and all dices have the same numbers !")
+              break
+
+            // if (refValues.forEach(element => (element === refValue ))) {
+            //   console.log("Congratulations, you've won and all dices have the same numbers !")
+            //   break
+            // }
+            
+            // } else {
+            //   console.log("please, check wheather you mark different values?")
+            // }
+
+          }  
+        } else {
+          console.log("New!", refValues.length)
+          refValues.push(currentElement.value) 
+          // if (refValues.length > 9) {
+          //   console.log("Congratulations, you've won!")
+          //   break
+          // } 
+
+        }
+
+      }
+      
+    }
+  //  console.log(`refValues: ${refValues}`)
+    console.log("refValues:   ", refValues)
+
+    console.log(dice)
+    // let dis = [0, 1, 2, 3, 4].reduce(function (previousElement, currentElement, index, array) {
+    //   return previousElement + currentElement;
+    // });
+    // console.log(dis)
+    console.log("Dice state changed")
+    
+
+  }, [dice])
+
+  
+
+
+  function generateNewDie() {
+    return {
+        value: Math.ceil(Math.random() * 6),
+        isHeld: false,
+        id: nanoid()
+    }
   }
-}
-
-function allNewDice() {
-  const newDice = []
-  for (let i = 0; i < 10; i++) {
-      newDice.push(generateNewDie())
+  
+  function allNewDice() {
+    const newDice = []
+    for (let i = 0; i < 10; i++) {
+        newDice.push(generateNewDie())
+    }
+    return newDice
   }
-  return newDice
-}
-
-              /**
-              * Challenge #8: Update the `rollDice` function to not just roll
-              * all new dice, but instead to look through the existing dice
-              * to NOT role any that are being `held`.
-              * 
-              * Hint: this will look relatively similiar to the `holdDice`
-              * function below. When creating new dice, remember to use
-              * `id: nanoid()` so any new dice have an `id` as well.
-              */
-
-//#8refactoring  function rollDice() {
-//#8refactoring    setDice(prevDice => prevDice.map(
-//#8refactoring      die => (die.isHeld !== true ? {...die, value: Math.ceil(Math.random() * 6)} : die)))
-//#8refactoring
-//#8refactoring  }
-function rollDice() {
-  setDice(oldDice => oldDice.map(die => {
-      return die.isHeld ? 
-          die :
-          generateNewDie()
-  }))
-}
-
-
-  function toggle(id) {
-    setDice(prevDice => prevDice.map(die => (die.id === id) ? {...die, isHeld: !die.isHeld} : die))
+  
+  
+  function rollDice() {
+    setDice(oldDice => oldDice.map(die => {
+        return die.isHeld ? 
+            die :
+            generateNewDie()
+    }))
   }
+
+
 
   function holdDice(id) {
     setDice(prevDice => prevDice.map(die => (die.id === id) ? {...die, isHeld: !die.isHeld} : die))
@@ -154,14 +148,12 @@ function rollDice() {
   }
 
 
-// const diceElements = dice.map(die =>  <Die key={die.id} value={die.value}  /> )  //  instead of <Die value={die} />
   const diceElements = dice.map(die => (
     <Die 
       key={die.id}
       isHeld={die.isHeld}
       value={die.value}
       holdDice={() => holdDice(die.id)}
-//#7  toggle={() => toggle(die.id)}           //Working!
     />
   ))
 
