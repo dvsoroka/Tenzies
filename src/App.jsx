@@ -62,6 +62,10 @@ function App() {
   
   
   function rollDice() {
+    if (tenzies) {
+      setDice(oldDice => oldDice.map(die => generateNewDie()) );
+      setTenzies(false);
+    }
     setDice(oldDice => oldDice.map(die => {
         return die.isHeld ? 
             die :
