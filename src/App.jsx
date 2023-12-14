@@ -4,16 +4,15 @@ import Main from './components/Main.jsx'
 import Die from './components/Die.jsx'
 import {nanoid} from "nanoid"
 import '../style.css'
+import useWindowSize from './components/useWindowSize.jsx'
+import Confetti from 'react-confetti'
 
 function App() {
 
   const [dice, setDice] = React.useState(allNewDice());
   const [tenzies, setTenzies] = React.useState(false)
 
-
-  React.useEffect(() =>{
-    tenzies && console.log("You won!")
-  }, [tenzies])
+  const { width, height } = useWindowSize()
 
 
 /**
@@ -26,12 +25,16 @@ function App() {
  * "You won!" to the console
  */
   React.useEffect(() => {
-    const allHeld = dice.every(die => die.isHeld === true)
+//  const allHeld = dice.every(die => die.isHeld === true)
+    const allHeld = dice.every(die => die.isHeld)
     const firstvalue = dice[0].value
     const allSameValue = dice.every(die => die.value === firstvalue)
+
+    
+
     if (allHeld && allSameValue) {
       setTenzies(true)
-      console.log("You Won!")
+      console.log("You won!")
     }
 
     
@@ -87,6 +90,7 @@ function App() {
   return (
     
     <main> 
+      {tenzies && <Confetti />}
       <div className="main--field">
         <h1 className='main--title'>Tenzies</h1>
         <p className='main--text'>Roll untill all dice are the same. Click each die to freeze it at its current value between rolls.</p>
@@ -97,7 +101,15 @@ function App() {
         </div>       
       </div>
 
-      <button className='roll-dice' onClick={rollDice}>Roll</button>
+      <button className='roll-dice' onClick={rollDice}>{tenzies ? "New Game"  : "Roll"}</button>
+
+    
+  
+   {/* {tenzies && <Confetti
+      width={width}
+      height={height}
+    />  } */}
+    {tenzies && <Confetti />}
       
     </main>
   )
@@ -106,3 +118,8 @@ function App() {
 
 
 export default App
+
+// https://github.com/alampros/react-confetti#readme
+// npm install react-confetti
+// import useWindowSize from 'react-use/lib/useWindowSize'
+// import Confetti from 'react-confetti'
